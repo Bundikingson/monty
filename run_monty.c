@@ -121,12 +121,10 @@ int run_monty(FILE *script_fd)
 
 {
     stack_t *stack = NULL;
-    
     char *line = NULL;
-    
-    size_t line_capacity = 1024 /* specify the buffer size */
-   
-    void (*op_func)(stack_t**, unsigned int);
+    size_t line_capacity = 1024; /* specify the buffer size */
+    size_t exit_status = EXIT_SUCCESS;
+    unsigned int line_number = 0;
 
     if (init_stack(&stack) == EXIT_FAILURE)
         return (EXIT_FAILURE);
@@ -136,22 +134,31 @@ int run_monty(FILE *script_fd)
         /* Handle memory allocation failure */
     }
 
-    size_t exit_status = EXIT_SUCCESS;
-    unsigned int line_number = 0, prev_tok_len = 0;
-    void (*op_func)(stack_t**, unsigned int);
-
-    if (init_stack(&stack) == EXIT_FAILURE)
-        return (EXIT_FAILURE);
-
- while (fgets(line, line_capacity, script_fd) != NULL)
+    while (fgets(line, line_capacity, script_fd) != NULL)
     {
         line_number++;
         op_toks = strtow(line, DELIMS);
-if (op_toks == NULL)
-{
-if (is_empty_line(line, DELIMS))
-continue;
- free_stack(&stack);
+        if (op_toks == NULL)
+        {
+            if (is_empty_line(line, DELIMS))
+                continue;
+            free_stack(&stack);
+
+            if (line && *line == 0)
+            {
+                free(line);
+                return (malloc_error());
+            }
+
+            free(line);
+            return (exit_status);
+        }
+        /* Rest of your code for processing op_toks and executing the commands */
+        
+           free_tokens();
+    }
+
+    free_stack(&stack);
 
     if (line && *line == 0)
     {
@@ -162,4 +169,3 @@ continue;
     free(line);
     return (exit_status);
 }
-
