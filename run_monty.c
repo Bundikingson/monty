@@ -121,10 +121,11 @@ int run_monty(FILE *script_fd)
 
 {
     stack_t *stack = NULL;
+    
     char *line = NULL;
-    size_t line_capacity = /* specify the buffer size */;
-    size_t exit_status = EXIT_SUCCESS;
-    unsigned int line_number = 0, prev_tok_len = 0;
+    
+    size_t line_capacity = 1024 /* specify the buffer size */
+   
     void (*op_func)(stack_t**, unsigned int);
 
     if (init_stack(&stack) == EXIT_FAILURE)
@@ -161,3 +162,4 @@ continue;
     free(line);
     return (exit_status);
 }
+
